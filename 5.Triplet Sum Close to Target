@@ -1,0 +1,41 @@
+Given an array of unsorted numbers and a target number, find a triplet in the array whose sum is as close to the target number as possible, return the sum of the triplet. 
+If there are more than one such triplet, return the sum of the triplet with the smallest sum.
+
+Example 1:
+
+Input: [-1, 0, 2, 3], target=3 
+Output: 2
+Explanation: There are two triplets whose sum is less than the target: [-1, 0, 3], [-1, 0, 2]
+
+Input: [0, 0, 1, 1, 2, 6], target=5
+Output: 4
+Explanation: There are two triplets with distance '1' from target: [1, 1, 2] & [0,0, 6]. 
+Between these two triplets, the correct answer will be [1, 1, 2] as it has a sum '4' which is less than the sum of the other triplet which is '6'. 
+This is because of the following requirement: 'If there are more than one such triplet, return the sum of the triplet with the smallest sum.'
+
+
+def closest_triplet_sum(arr, target):
+    arr.sort()
+    closest_sum = float('inf')  # Initialize closest_sum to positive infinity.
+
+    for i in range(len(arr) - 2):
+        left, right = i + 1, len(arr) - 1
+
+        while left < right:
+            current_sum = arr[i] + arr[left] + arr[right]
+
+            if abs(current_sum - target) < abs(closest_sum - target):
+                closest_sum = current_sum
+
+            if current_sum < target:
+                left += 1
+            else:
+                right -= 1
+
+    return closest_sum
+
+# Example usage:
+arr = [-1, 2, 1, -4]
+target = 1
+result = closest_triplet_sum(arr, target)
+print("Closest triplet sum to", target, "is", result)
