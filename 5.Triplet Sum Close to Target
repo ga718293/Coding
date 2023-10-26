@@ -14,28 +14,52 @@ Between these two triplets, the correct answer will be [1, 1, 2] as it has a sum
 This is because of the following requirement: 'If there are more than one such triplet, return the sum of the triplet with the smallest sum.'
 
 
-def closest_triplet_sum(arr, target):
-    arr.sort()
-    closest_sum = float('inf')  # Initialize closest_sum to positive infinity.
+dusing namespace std;
 
-    for i in range(len(arr) - 2):
-        left, right = i + 1, len(arr) - 1
+#include <algorithm>
+#include <iostream>
+#include <limits>
+#include <vector>
 
-        while left < right:
-            current_sum = arr[i] + arr[left] + arr[right]
+class TripletSumCloseToTarget {
+public:
+  static int searchTriplet(vector<int>& arr, int targetSum) {
+    sort(arr.begin(), arr.end());
+    int smallestDifference = numeric_limits<int>::max();
+    for (int i = 0; i < arr.size() - 2; i++) {
+      int left = i + 1, right = arr.size() - 1;
+      while (left < right) {
+        // comparing the sum of three numbers to the 'targetSum' can cause overflow
+        // so, we will try to find a target difference
+        int targetDiff = targetSum - arr[i] - arr[left] - arr[right];
+        if (targetDiff == 0) {  //  we've found a triplet with an exact sum
+          return targetSum;  // return sum of all the numbers
+        }
 
-            if abs(current_sum - target) < abs(closest_sum - target):
-                closest_sum = current_sum
+        if (abs(targetDiff) < abs(smallestDifference) ||
+              (abs(targetDiff) == abs(smallestDifference) && 
+                            targetDiff > smallestDifference)) {
+          smallestDifference = targetDiff;  // save the closest difference
+        }
 
-            if current_sum < target:
-                left += 1
-            else:
-                right -= 1
+        if (targetDiff > 0) {
+          left++;  // we need a triplet with a bigger sum
+        } else {
+          right--;  // we need a triplet with a smaller sum
+        }
+      }
+    }
+    return targetSum - smallestDifference;
+  }
+};
 
-    return closest_sum
-
-# Example usage:
-arr = [-1, 2, 1, -4]
-target = 1
-result = closest_triplet_sum(arr, target)
-print("Closest triplet sum to", target, "is", result)
+int main(int argc, char* argv[]) {
+  vector<int> vec = {-1, 0, 2, 3};
+  cout << TripletSumCloseToTarget::searchTriplet(vec, 2) << endl;
+  vec = {-3, -1, 1, 2};
+  cout << TripletSumCloseToTarget::searchTriplet(vec, 1) << endl;
+  vec = {1, 0, 1, 1};
+  cout << TripletSumCloseToTarget::searchTriplet(vec, 100) << endl;
+  vec = {0, 0, 1, 1, 2, 6};
+  cout << TripletSumCloseToTarget::searchTriplet(vec, 5) << endl;
+}
