@@ -1,0 +1,29 @@
+Squaring a Sorted Array
+
+Given a sorted array, create a new array containing squares of all the numbers of the input array in the sorted order.
+
+
+
+def sorted_squares(nums):
+    n = len(nums)
+    result = [0] * n  # Initialize the result array with zeros
+    left, right = 0, n - 1  # Pointers for the left and right ends of the array
+
+    for i in range(n - 1, -1, -1):
+        # Compare the absolute values of elements at the left and right pointers.
+        left_square = nums[left] ** 2
+        right_square = nums[right] ** 2
+
+        if left_square > right_square:
+            result[i] = left_square
+            left += 1
+        else:
+            result[i] = right_square
+            right -= 1
+
+    return result
+
+# Example usage:
+input_array = [-4, -2, -1, 0, 3, 5]
+squared_array = sorted_squares(input_array)
+print("Array containing squares in sorted order:", squared_array)
